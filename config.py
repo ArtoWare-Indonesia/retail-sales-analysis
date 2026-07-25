@@ -6,7 +6,7 @@ from pathlib import Path
 
 # Application
 APP_NAME = "Retail Sales Analysis"
-APP_VERSION = "v0.1.0"
+APP_VERSION = "v0.2.0"
 
 # Directories
 BASE_DIR = Path(__file__).resolve().parent

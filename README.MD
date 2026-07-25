@@ -1,30 +1,39 @@
 # Retail Sales Analysis
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Version](https://img.shields.io/badge/version-v0.1.0-green)
+![Version](https://img.shields.io/badge/version-v0.2.0-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 A Business Intelligence portfolio project that analyzes retail sales data using Python and Pandas.
 
-## Features
+
+## New Features
 
 - Load retail sales dataset
-- Display dataset overview
-- Show dataset information
-- Generate descriptive statistics
+- Data cleaning pipeline
+- Missing value detection
+- Duplicate detection and removal
+- Data type validation
+- Export cleaned dataset
+
+## Features
+
 - Modular project structure
 - Configurable application settings
-- Logging support
+- Logging with Python logging module
 
 ## Project Structure
 
 ```
 retail-sales-analysis/
 ├── data/
-│   └── raw/
+|   ├── raw/
+│   └── processed
+|   
 ├── output/
 ├── src/
 │   ├── loader.py
+|   ├── cleaning.py
 │   └── utils/
 │       └── logger.py
 ├── config.py
@@ -49,28 +58,41 @@ pip install -r requirements.txt
 
 ```bash
 python main.py
+python src/cleaning.py
+```
+Output:
+
+- Detect missing values
+- Detect duplicate rows
+- Validate data types
+- Export cleaned dataset to `data/processed/`
 ```
 
 ## Current Version
 
-**v0.1.0**
+**v0.2.0**
 
 ### Features
 
-- Initial project structure
-- Dataset loader
-- Logging
-- Dataset overview
-- Descriptive statistics
+- Load retail sales dataset
+- Data cleaning pipeline
+- Missing value detection
+- Duplicate detection and removal
+- Data type validation
+- Export cleaned dataset
+- Modular project structure
+- Configurable application settings
+- Logging with Python logging module
 
 ## Roadmap
 
-- v0.2.0 – Data Cleaning
-- v0.3.0 – Exploratory Data Analysis
-- v0.4.0 – Business Insights
-- v0.5.0 – Statistics
-- v0.6.0 – Visualization
-- v1.0.0 – Portfolio Release
+- ✅ v0.1.0 - Project setup
+- ✅ v0.2.0 - Data Cleaning
+- ⏳ v0.3.0 - Exploratory Data Analysis (EDA)
+- ⏳ v0.4.0 - Data Visualization
+- ⏳ v0.5.0 - Dashboard & Insights
+- ⏳ v0.6.0 – Visualization
+- ⏳ v1.0.0 – Portfolio Release
 
 ## License
 
