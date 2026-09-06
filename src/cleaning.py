@@ -1,8 +1,7 @@
 import logging
-from pathlib import Path
-
 import pandas as pd
 
+from pathlib import Path
 
 logging.basicConfig(
     level=logging.INFO,
@@ -15,14 +14,12 @@ logger = logging.getLogger(__name__)
 class DataCleaner:
     """Clean and validate retail sales dataset."""
 
-    def __init__(self, input_file, output_file):
-        self.input_file = Path(input_file)
+    def __init__(self, df, output_file):
+        self.df = df
         self.output_file = Path(output_file)
 
     def run(self):
-        logger.info("Loading dataset: %s", self.input_file)
-
-        df = pd.read_csv(self.input_file)
+        df = self.df.copy()
 
         logger.info("Rows: %d | Columns: %d", *df.shape)
 
@@ -67,12 +64,3 @@ class DataCleaner:
         logger.info("Data cleaning completed successfully.")
 
         return df
-
-
-if __name__ == "__main__":
-    cleaner = DataCleaner(
-        input_file="data/raw/superstore.csv",
-        output_file="data/processed/superstore_clean.csv",
-    )
-
-    cleaner.run()
