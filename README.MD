@@ -1,16 +1,16 @@
 # Retail Sales Analysis
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Version](https://img.shields.io/badge/version-v0.4.0-green)
+![Version](https://img.shields.io/badge/version-v0.5.0-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 A Business Intelligence portfolio project that analyzes retail sales data using Python, Pandas, and Matplotlib.
 
-The project focuses on data cleaning, exploratory data analysis (EDA), advanced data visualization, and generating business insights from retail sales data.
+The project focuses on data cleaning, exploratory data analysis (EDA), advanced data visualization, business metrics, and generating actionable business insights from retail sales data.
 
 ## Project Overview
 
-This project uses the Superstore retail sales dataset to analyze sales performance, profitability, and business trends.
+This project uses the Superstore retail sales dataset to analyze sales performance, profitability, customer behavior, product performance, and business trends.
 
 The analysis covers:
 
@@ -18,6 +18,7 @@ The analysis covers:
 * Feature engineering
 * Exploratory Data Analysis (EDA)
 * Advanced data visualization
+* Business metrics
 * Sales performance by category
 * Sales performance by region
 * Monthly sales trends
@@ -27,6 +28,8 @@ The analysis covers:
 * Sales and profit relationship
 * Profit margin analysis
 * Business insights and conclusions
+* Automated analysis pipeline
+* Automated testing
 
 ## Features
 
@@ -52,28 +55,75 @@ The analysis covers:
 
 ### Advanced Data Visualization
 
-* Sales by category
-* Sales by region
-* Monthly sales trend
-* Top 10 customers
-* Top 10 products
-* Bottom 10 products
-* Profit by category
-* Sales vs Profit
-* Sales vs Profit by Category
-* Profit Margin by Category
-* Sales & Profit by Region
-* Chart annotations for key values
-* Improved chart readability and presentation
-* Export visualization figures as PNG files
+The visualization pipeline generates analysis charts including:
 
-### Project Structure
+* Sales and profit contribution
+* Region contribution
+* Discount vs profit relationship
+* Sales performance by category
+* Sales performance by region
+* Product performance
+* Profitability analysis
 
-* Modular Python project structure
-* Configurable application settings
-* Centralized logging
-* Reusable visualization pipeline
-* Automated chart generation
+Visualization figures are exported as PNG files to the `images/` directory.
+
+### Business Metrics & Insights
+
+Version 0.5.0 introduces a dedicated business analysis layer.
+
+The project separates business metrics and business insights from the visualization layer, making the analysis easier to maintain, test, and extend.
+
+The analysis includes metrics such as:
+
+* Total sales
+* Total profit
+* Profit margin
+* Total orders
+* Total customers
+* Total products
+* Sales performance by category
+* Profit performance by category
+* Regional performance
+* Monthly sales performance
+* Top customer performance
+* Top product performance
+
+### Integrated Analysis Pipeline
+
+The project now provides an integrated pipeline through `main.py`:
+
+```text
+Raw Dataset
+     ↓
+Data Cleaning
+     ↓
+Feature Engineering
+     ↓
+Business Metrics
+     ↓
+Business Insights
+     ↓
+Visualization
+     ↓
+Analysis Output
+```
+
+### Automated Testing
+
+Version 0.5.0 introduces a dedicated test suite using `pytest`.
+
+The test suite covers:
+
+* Data cleaning
+* Business insights
+* Visualization
+* End-to-end pipeline integration
+
+Current test status:
+
+```text
+14 tests passed
+```
 
 ## Project Structure
 
@@ -85,36 +135,36 @@ retail-sales-analysis/
 │   └── processed/
 │       └── superstore_clean.csv
 ├── images/
-│   ├── sales_by_category.png
-│   ├── sales_by_region.png
-│   ├── monthly_sales_trend.png
-│   ├── top_10_customers.png
-│   ├── top_products.png
-│   ├── bottom_products.png
-│   ├── profit_by_category.png
-│   ├── sales_vs_profit.png
-│   ├── profit_margin_by_category.png
-│   └── sales_profit_by_region.png
+│   ├── discount_vs_profit.png
+│   ├── region_contribution.png
+│   └── sales_profit_contribution.png
 ├── notebooks/
 │   └── retail_sales_analysis.ipynb
 ├── src/
-│   ├── loader.py
+│   ├── business_metrics.py
 │   ├── cleaning.py
+│   ├── insights.py
 │   ├── visualization.py
 │   └── utils/
 │       └── logger.py
+├── tests/
+│   ├── test_cleaning.py
+│   ├── test_insights.py
+│   ├── test_pipeline.py
+│   └── test_visualization.py
 ├── config.py
 ├── main.py
 ├── requirements.txt
 └── README.md
 ```
 
-##Requirements
+## Requirements
 
 * Python 3.13+
 * pandas
 * matplotlib
 * openpyxl
+* pytest
 
 Install the required dependencies:
 
@@ -131,19 +181,36 @@ From the project root directory:
 ```bash
 python main.py
 ```
+
+The main pipeline runs the data processing, business analysis, and visualization workflow.
+
 ### Run Visualization Pipeline
 
-The visualization module can be executed from the project root using:
+The visualization module can also be executed independently:
 
 ```bash
 python -m src.visualization
 ```
 
-The visualization pipeline loads the cleaned dataset and automatically generates the analysis charts in the images/ directory.
+The visualization pipeline loads the cleaned dataset and generates the configured analysis charts in the `images/` directory.
+
+### Run Tests
+
+Run the complete test suite with:
+
+```bash
+python -m pytest -v
+```
+
+Expected result for version 0.5.0:
+
+```text
+14 passed
+```
 
 ### Jupyter Notebook
 
-The complete exploratory analysis can also be viewed in:
+The exploratory analysis can also be viewed in:
 
 ```text
 notebooks/retail_sales_analysis.ipynb
@@ -151,7 +218,7 @@ notebooks/retail_sales_analysis.ipynb
 
 The notebook contains the EDA process, visualizations, and interpretation of the analysis results.
 
-### Analysis Workflow
+## Analysis Workflow
 
 ```text
 Load Dataset
@@ -162,33 +229,34 @@ Feature Engineering
      ↓
 Exploratory Data Analysis
      ↓
-Advanced Data Visualization
+Business Metrics
      ↓
 Business Insights
+     ↓
+Advanced Data Visualization
      ↓
 Export Results
 ```
 
-### Analysis Output
+## Analysis Output
 
 The project generates:
 
 * Cleaned retail sales dataset
-* Sales analysis by category
-* Sales analysis by region
-* Monthly sales trend
-* Top 10 customers
-* Top and bottom products
-* Profit analysis
-* Sales vs Profit analysis
-* Profit margin analysis
-* Sales & Profit by Region analysis
+* Business metrics
+* Business insights
+* Sales and profit analysis
+* Regional analysis
+* Product performance analysis
+* Customer performance analysis
+* Profitability analysis
 * Visualization figures in PNG format
-* Business insights based on the analysis
 
-### Current Version
+## Current Version
 
-v0.4.0 — Advanced Data Visualization
+**v0.5.0 — Business Insights & Tested Analysis Pipeline**
+
+Version 0.5.0 extends the project from exploratory analysis and visualization into a more structured Business Intelligence pipeline.
 
 ### Implemented
 
@@ -206,30 +274,38 @@ v0.4.0 — Advanced Data Visualization
 * Top 10 customer analysis
 * Top product analysis
 * Bottom product analysis
-* Profit by category analysis
-* Sales vs Profit analysis
-* Sales vs Profit by Category analysis
-* Profit Margin by Category analysis
-* Sales & Profit by Region analysis
-* Advanced chart formatting
-* Chart annotations
-* Data visualization with Matplotlib
+* Profitability analysis
+* Advanced data visualization
+* Business metrics module
+* Business insights module
+* Integrated analysis pipeline
+* Configurable application settings
+* Centralized logging
+* Automated chart generation
 * Export cleaned dataset
 * Export visualization images
-* Modular project structure
-* Configurable application settings
-* Logging with Python logging module
+* Automated test suite
+* Unit tests for cleaning
+* Unit tests for insights
+* Unit tests for visualization
+* End-to-end pipeline integration test
+* **14 tests passed**
 
-### Roadmap
+## Roadmap
 
 * ✅ v0.1.0 — Project Setup
 * ✅ v0.2.0 — Data Cleaning
 * ✅ v0.3.0 — Exploratory Data Analysis (EDA)
 * ✅ v0.4.0 — Advanced Data Visualization
-* ⏳ v0.5.0 — Dashboard & Business Insights
+* ✅ v0.5.0 — Business Insights & Tested Analysis Pipeline
 * ⏳ v0.6.0 — Interactive Visualization
 * ⏳ v1.0.0 — Portfolio Release
 
-### License
+### Future Development
+
+The next development phase will focus on improving the presentation and usability of the analysis, including interactive visualization and portfolio-oriented reporting.
+
+## License
 
 This project is licensed under the MIT License.
+
