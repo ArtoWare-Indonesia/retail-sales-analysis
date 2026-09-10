@@ -123,3 +123,30 @@ def test_visualizer_run_creates_expected_number_of_charts(tmp_path):
     chart_files = list(output_dir.glob("*.png"))
 
     assert len(chart_files) == 13
+
+def test_interactive_visualizer_creates_dashboard(tmp_path):
+    from src.interactive_visualization import InteractiveVisualizer
+    from src.business_metrics import BusinessMetrics
+
+    df = pd.DataFrame(
+        {
+            "Order ID": ["O1", "O2", "O3"],
+            "Customer ID": ["C1", "C2", "C3"],
+            "Product ID": ["P1", "P2", "P3"],
+            "Customer Name": ["Customer A", "Customer B", "Customer C"],
+            "Product Name": ["Product A", "Product B", "Product C"],
+            "Category": ["Technology", "Furniture", "Office Supplies"],
+            "Region": ["West", "East", "Central"],
+            "Order Date": pd.to_datetime(["2023-01-01", "2023-02-01", "2023-03-01"]),
+            "Ship Date": pd.to_datetime(["2023-01-03", "2023-02-03", "2023-03-03"]),
+            "Sales": [1000, 800, 600],
+            "Profit": [200, 100, 50],
+            "Quantity": [2, 3, 4],
+            "Discount": [0.1, 0.2, 0.3],
+        }
+    )
+    output_dir = tmp_path / "interactive"
+    output = InteractiveVisualizer(df, output_dir).run(BusinessMetrics(df).run())
+    assert output.exists()
+    assert output.suffix == ".html"
+    assert output.stat().st_size > 0

@@ -5,7 +5,6 @@ Business insights for retail sales analysis.
 import logging
 import pandas as pd
 
-from src.utils.logger import setup_logger
 
 logger = logging.getLogger(__name__)
 
@@ -361,30 +360,26 @@ class BusinessInsights:
         narratives = []
 
         # Category narrative
-        narratives.append(
-            (
-                "Category Performance",
-                (
-                    f"{category['highest_sales_category']} is the "
-                    f"leading category by sales, profit, and profit margin. "
-                    f"This indicates that the category is a strong "
-                    f"contributor to overall business performance."
-                ),
-            )
+        category_message = (
+            f"{category['highest_sales_category']} leads in sales, "
+            f"{category['highest_profit_category']} leads in profit, and "
+            f"{category['highest_margin_category']} leads in profit margin."
         )
+        narratives.append((
+            "Category Performance",
+            category_message + " This separates scale from profitability performance."
+        ))
 
         # Region narrative
-        narratives.append(
-            (
-                "Regional Performance",
-                (
-                    f"{region['highest_sales_region']} is the strongest "
-                    f"performing region based on sales, profit, and profit "
-                    f"margin. This region represents the strongest overall "
-                    f"regional performance in the dataset."
-                ),
-            )
+        region_message = (
+            f"{region['highest_sales_region']} leads in sales, "
+            f"{region['highest_profit_region']} leads in profit, and "
+            f"{region['highest_margin_region']} leads in profit margin."
         )
+        narratives.append((
+            "Regional Performance",
+            region_message + " This separates regional scale from profitability."
+        ))
 
         # Monthly narrative
         narratives.append(
@@ -424,17 +419,13 @@ class BusinessInsights:
         )
 
         # Product narrative
-        narratives.append(
-            (
-                "Product Performance",
-                (
-                    f"{product['top_sales_product']} is the leading product "
-                    f"by both sales and profit, generating "
-                    f"${product['top_sales_value']:,.2f} in sales and "
-                    f"${product['top_profit_value']:,.2f} in profit."
-                ),
-            )
+        product_message = (
+            f"{product['top_sales_product']} leads in sales, while "
+            f"{product['top_profit_product']} leads in profit, generating "
+            f"${product['top_sales_value']:,.2f} in sales and "
+            f"${product['top_profit_value']:,.2f} in profit respectively."
         )
+        narratives.append(("Product Performance", product_message))
 
         return narratives
 
@@ -538,8 +529,9 @@ class BusinessInsights:
             {
                 "area": "Category",
                 "finding": (
-                    f"{category['highest_sales_category']} leads "
-                    "in sales, profit, and profit margin."
+                    f"{category['highest_sales_category']} leads in sales; "
+                    f"{category['highest_profit_category']} leads in profit; "
+                    f"{category['highest_margin_category']} leads in profit margin."
                 ),
                 "implication": (
                     f"The {category['highest_sales_category']} category "
@@ -558,8 +550,9 @@ class BusinessInsights:
             {
                 "area": "Region",
                 "finding": (
-                    f"{region['highest_sales_region']} leads in sales, "
-                    "profit, and profit margin."
+                    f"{region['highest_sales_region']} leads in sales; "
+                    f"{region['highest_profit_region']} leads in profit; "
+                    f"{region['highest_margin_region']} leads in profit margin."
                 ),
                 "implication": (
                     f"{region['highest_sales_region']} represents the "
@@ -658,9 +651,7 @@ class BusinessInsights:
         return implications
 
     def run(self):
-        #"""Run complete business insight analysis."""
-
-        setup_logger()
+        """Run complete business insight analysis."""
 
         logger.info(
             "Starting business insights analysis..."

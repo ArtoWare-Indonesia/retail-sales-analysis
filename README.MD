@@ -1,12 +1,12 @@
 # Retail Sales Analysis
 
 ![Python](https://img.shields.io/badge/Python-3.13-blue)
-![Version](https://img.shields.io/badge/version-v0.5.0-green)
+![Version](https://img.shields.io/badge/version-v0.6.0-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-A Business Intelligence portfolio project that analyzes retail sales data using Python, Pandas, and Matplotlib.
+A Business Intelligence portfolio project that analyzes retail sales data using Python, Pandas, Matplotlib, and Plotly.
 
-The project focuses on data cleaning, exploratory data analysis (EDA), advanced data visualization, business metrics, and generating actionable business insights from retail sales data.
+The project focuses on data cleaning, exploratory data analysis (EDA), advanced visualization, business metrics, actionable business insights, testing, and interactive visualization.
 
 ## Project Overview
 
@@ -26,10 +26,12 @@ The analysis covers:
 * Product sales performance
 * Profitability analysis
 * Sales and profit relationship
+* Interactive sales, regional, monthly, and discount-profit analysis
 * Profit margin analysis
 * Business insights and conclusions
 * Automated analysis pipeline
 * Automated testing
+* Interactive HTML dashboard
 
 ## Features
 
@@ -65,13 +67,13 @@ The visualization pipeline generates analysis charts including:
 * Product performance
 * Profitability analysis
 
-Visualization figures are exported as PNG files to the `images/` directory.
+Visualization figures are exported as PNG files to the `images/` directory. Version 0.6.0 also generates an interactive Plotly HTML dashboard in `output/interactive/`.
 
 ### Business Metrics & Insights
 
-Version 0.5.0 introduces a dedicated business analysis layer.
+Version 0.6.0 includes the dedicated business analysis layer introduced in v0.5.0 and extends it with interactive visualization.
 
-The project separates business metrics and business insights from the visualization layer, making the analysis easier to maintain, test, and extend.
+Business metrics and business insights consume the same cleaned DataFrame, keeping the pipeline consistent and easier to test and extend.
 
 The analysis includes metrics such as:
 
@@ -103,7 +105,9 @@ Business Metrics
      ↓
 Business Insights
      ↓
-Visualization
+Static Visualization
+     ↓
+Interactive Visualization
      ↓
 Analysis Output
 ```
@@ -122,7 +126,7 @@ The test suite covers:
 Current test status:
 
 ```text
-14 tests passed
+22 tests passed
 ```
 
 ## Project Structure
@@ -205,7 +209,7 @@ python -m pytest -v
 Expected result for version 0.5.0:
 
 ```text
-14 passed
+22 passed
 ```
 
 ### Jupyter Notebook
@@ -235,6 +239,8 @@ Business Insights
      ↓
 Advanced Data Visualization
      ↓
+Interactive Visualization
+     ↓
 Export Results
 ```
 
@@ -254,7 +260,7 @@ The project generates:
 
 ## Current Version
 
-**v0.5.0 — Business Insights & Tested Analysis Pipeline**
+**v0.6.0 — Interactive Visualization**
 
 Version 0.5.0 extends the project from exploratory analysis and visualization into a more structured Business Intelligence pipeline.
 
@@ -297,7 +303,7 @@ Version 0.5.0 extends the project from exploratory analysis and visualization in
 * ✅ v0.2.0 — Data Cleaning
 * ✅ v0.3.0 — Exploratory Data Analysis (EDA)
 * ✅ v0.4.0 — Advanced Data Visualization
-* ✅ v0.5.0 — Business Insights & Tested Analysis Pipeline
+* ✅ v0.6.0 — Business Insights & Tested Analysis Pipeline
 * ⏳ v0.6.0 — Interactive Visualization
 * ⏳ v1.0.0 — Portfolio Release
 

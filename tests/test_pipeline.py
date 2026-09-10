@@ -4,6 +4,7 @@ from src.loader import load_dataset
 from src.cleaning import DataCleaner
 from src.insights import BusinessInsights
 from src.visualization import Visualizer
+from src.interactive_visualization import InteractiveVisualizer
 
 
 def test_full_pipeline(tmp_path):

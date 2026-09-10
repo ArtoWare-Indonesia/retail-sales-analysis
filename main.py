@@ -1,6 +1,6 @@
 """
 Retail Sales Analysis
-Version : v0.5.0
+Version : v0.6.0
 Author  : ArtoWare Indonesia
 """
 import logging
@@ -10,6 +10,8 @@ from src.utils.logger import setup_logger
 from src.loader import load_dataset
 from src.cleaning import DataCleaner
 from src.insights import BusinessInsights
+from src.business_metrics import BusinessMetrics
+from src.interactive_visualization import InteractiveVisualizer
 from src.visualization import Visualizer
 
 
@@ -45,13 +47,14 @@ def main():
 
         cleaned_df = cleaner.run()
 
-        # Business Insights
-        #logger.info("Starting business insights analysis...")
+        # Business Metrics
+        metrics = BusinessMetrics(cleaned_df)
+        kpis = metrics.run()
 
+        # Business Insights
         insights = BusinessInsights(cleaned_df)
         results = insights.run()
-
-        #logger.info("Business insights analysis completed successfully."
+        results["kpis"] = kpis
 
         # Visualization
         #logger.info("Starting visualization...")
@@ -63,7 +66,8 @@ def main():
 
         visualizer.run()
 
-        #logger.info("Visualization completed successfully.")
+        interactive = InteractiveVisualizer(cleaned_df, "output/interactive")
+        interactive.run(kpis)
 
         logger.info("=" * 50) 
         logger.info("Retail Sales Analysis completed successfully.")
