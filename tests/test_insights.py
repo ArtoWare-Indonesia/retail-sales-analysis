@@ -113,3 +113,74 @@ def test_narrative_and_implications_structure():
     for item in results["implications"]:
         assert set(item) == {"area", "finding", "implication", "recommendation"}
         assert all(item[key] for key in item)
+
+
+def test_category_summary_calculates_margin_from_aggregated_totals():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "P1", "Order Date": "2024-01-01", "Sales": 100, "Profit": 10},
+        {"Category": "A", "Region": "X", "Customer Name": "C2", "Product Name": "P2", "Order Date": "2024-01-01", "Sales": 300, "Profit": 90},
+        {"Category": "B", "Region": "Y", "Customer Name": "C3", "Product Name": "P3", "Order Date": "2024-01-01", "Sales": 100, "Profit": 20},
+    ])
+    summary = BusinessInsights(df).category_insights(df)["summary"]
+    assert summary.loc["A", "Sales"] == pytest.approx(400)
+    assert summary.loc["A", "Profit"] == pytest.approx(100)
+    assert summary.loc["A", "Profit Margin"] == pytest.approx(25)
+
+
+def test_customer_concentration_uses_top_ten_customers():
+    rows = [
+        {"Category": "A", "Region": "X", "Customer Name": f"C{i}", "Product Name": f"P{i}", "Order Date": "2024-01-01", "Sales": 100 - i, "Profit": 10}
+        for i in range(12)
+    ]
+    df = make_df(rows)
+    result = BusinessInsights(df).run()["contribution"]
+    assert result["top_customer_contribution"] == pytest.approx(100 / sum(100 - i for i in range(12)) * 100)
+    assert result["top_10_customer_contribution"] == pytest.approx(sum(100 - i for i in range(10)) / sum(100 - i for i in range(12)) * 100)
+
+
+def test_loss_making_products_excludes_zero_profit_products():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "Loss", "Order Date": "2024-01-01", "Sales": 100, "Profit": -20},
+        {"Category": "A", "Region": "X", "Customer Name": "C2", "Product Name": "BreakEven", "Order Date": "2024-01-01", "Sales": 100, "Profit": 0},
+        {"Category": "A", "Region": "X", "Customer Name": "C3", "Product Name": "Profit", "Order Date": "2024-01-01", "Sales": 100, "Profit": 30},
+    ])
+    result = BusinessInsights(df).run()["profitability"]
+    assert result["loss_making_product_count"] == 1
+    assert list(result["loss_making_products"].index) == ["Loss"]
+
+
+def test_product_narrative_keeps_sales_and_profit_values_with_their_leaders():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "Sales Leader", "Order Date": "2024-01-01", "Sales": 100, "Profit": 10},
+        {"Category": "A", "Region": "X", "Customer Name": "C2", "Product Name": "Profit Leader", "Order Date": "2024-01-01", "Sales": 50, "Profit": 40},
+    ])
+    insights = BusinessInsights(df)
+    product = insights.product_insights(df)
+    narrative = dict(insights.generate_narrative({
+        "category": {"highest_sales_category": "A", "highest_profit_category": "A", "highest_margin_category": "A"},
+        "region": {"highest_sales_region": "X", "highest_profit_region": "X", "highest_margin_region": "X"},
+        "monthly": {"highest_sales_month": "2024-01", "highest_sales_value": 150, "lowest_sales_month": "2024-01", "lowest_sales_value": 150},
+        "customer": {"top_customer": "C1", "top_customer_sales": 100},
+        "product": product,
+    }))["Product Performance"]
+    assert "Sales Leader leads in sales at $100.00" in narrative
+    assert "Profit Leader leads in profit at $40.00" in narrative
+    assert "Sales Leader leads in profit" not in narrative
+
+
+def test_product_implication_keeps_sales_and_profit_leaders_distinct():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "Sales Leader", "Order Date": "2024-01-01", "Sales": 100, "Profit": 10},
+        {"Category": "A", "Region": "X", "Customer Name": "C2", "Product Name": "Profit Leader", "Order Date": "2024-01-01", "Sales": 50, "Profit": 40},
+    ])
+    insights = BusinessInsights(df)
+    product = insights.product_insights(df)
+    implication = next(item for item in insights.generate_implications({
+        "category": {"highest_sales_category": "A", "highest_profit_category": "A", "highest_margin_category": "A"},
+        "region": {"highest_sales_region": "X", "highest_profit_region": "X", "highest_margin_region": "X"},
+        "monthly": {"highest_sales_month": "2024-01", "highest_sales_value": 150, "lowest_sales_month": "2024-01", "lowest_sales_value": 150},
+        "customer": {"top_customer": "C1", "top_customer_sales": 100},
+        "product": product,
+    }) if item["area"] == "Product")
+    assert "Sales Leader generated $100.00 in sales" in implication["finding"]
+    assert "Profit Leader generated $40.00 in profit" in implication["finding"]
