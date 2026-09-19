@@ -332,6 +332,7 @@ class BusinessInsights:
         loss_making_products = (
             products[products["Profit"] < 0]
         )
+        total_loss = loss_making_products["Profit"].sum()
 
         return {
             "category": category,
@@ -346,6 +347,7 @@ class BusinessInsights:
             "loss_making_product_count": (
                 len(loss_making_products)
             ),
+            "total_loss": total_loss,
         }
 
     def generate_narrative(self, results):
