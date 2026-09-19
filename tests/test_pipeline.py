@@ -29,11 +29,19 @@ def test_full_pipeline(tmp_path):
     assert isinstance(results, dict)
     assert len(results) > 0
 
-    # Visualization
+    # Static visualization
     output_dir = tmp_path / "images"
     visualizer = Visualizer(cleaned_df, output_dir)
     visualizer.run()
 
     chart_files = list(output_dir.glob("*.png"))
-
     assert len(chart_files) == 13
+
+    # Interactive visualization
+    interactive_dir = tmp_path / "interactive"
+    dashboard = InteractiveVisualizer(cleaned_df, interactive_dir).run(
+        results
+    )
+    assert dashboard.exists()
+    assert dashboard.stat().st_size > 0
+    assert dashboard.suffix == ".html"
