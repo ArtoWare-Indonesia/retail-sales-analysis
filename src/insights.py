@@ -420,10 +420,10 @@ class BusinessInsights:
 
         # Product narrative
         product_message = (
-            f"{product['top_sales_product']} leads in sales, while "
-            f"{product['top_profit_product']} leads in profit, generating "
-            f"${product['top_sales_value']:,.2f} in sales and "
-            f"${product['top_profit_value']:,.2f} in profit respectively."
+            f"{product['top_sales_product']} leads in sales at "
+            f"${product['top_sales_value']:,.2f}, while "
+            f"{product['top_profit_product']} leads in profit at "
+            f"${product['top_profit_value']:,.2f}."
         )
         narratives.append(("Product Performance", product_message))
 
@@ -633,7 +633,8 @@ class BusinessInsights:
                 "area": "Product",
                 "finding": (
                     f"{product['top_sales_product']} generated "
-                    f"${product['top_sales_value']:,.2f} in sales and "
+                    f"${product['top_sales_value']:,.2f} in sales, while "
+                    f"{product['top_profit_product']} generated "
                     f"${product['top_profit_value']:,.2f} in profit."
                 ),
                 "implication": (
