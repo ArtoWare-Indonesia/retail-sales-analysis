@@ -184,3 +184,59 @@ def test_product_implication_keeps_sales_and_profit_leaders_distinct():
     }) if item["area"] == "Product")
     assert "Sales Leader generated $100.00 in sales" in implication["finding"]
     assert "Profit Leader generated $40.00 in profit" in implication["finding"]
+
+
+def test_business_insights_rejects_missing_required_columns():
+    df = make_df([{"Category": "A", "Region": "X", "Sales": 100, "Profit": 20}])
+    with pytest.raises(ValueError, match="Missing required columns"):
+        BusinessInsights(df)
+
+
+def test_business_insights_handles_zero_sales_margin():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "P1", "Order Date": "2024-01-01", "Sales": 0, "Profit": 0},
+    ])
+    results = BusinessInsights(df).run()
+    assert results["category"]["summary"].loc["A", "Profit Margin"] == 0
+    assert results["region"]["summary"].loc["X", "Profit Margin"] == 0
+    assert results["contribution"]["top_customer_contribution"] == 0
+    assert results["contribution"]["top_product_sales_contribution"] == 0
+    assert results["contribution"]["top_product_profit_contribution"] == 0
+
+
+def test_business_insights_handles_single_group():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "P1", "Order Date": "2024-01-01", "Sales": 100, "Profit": 20},
+    ])
+    results = BusinessInsights(df).run()
+    assert results["category"]["highest_sales_category"] == "A"
+    assert results["region"]["highest_margin_region"] == "X"
+    assert results["customer"]["top_customer"] == "C1"
+    assert results["product"]["top_sales_product"] == "P1"
+    assert results["product"]["top_profit_product"] == "P1"
+    assert results["contribution"]["top_customer_contribution"] == pytest.approx(100)
+    assert results["contribution"]["top_10_customer_contribution"] == pytest.approx(100)
+
+
+def test_business_insights_handles_tied_winners_deterministically():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "P1", "Order Date": "2024-01-01", "Sales": 100, "Profit": 20},
+        {"Category": "B", "Region": "Y", "Customer Name": "C2", "Product Name": "P2", "Order Date": "2024-01-01", "Sales": 100, "Profit": 20},
+    ])
+    results = BusinessInsights(df).run()
+    assert results["category"]["highest_sales_category"] == "A"
+    assert results["category"]["highest_profit_category"] == "A"
+    assert results["region"]["highest_sales_region"] == "X"
+    assert results["product"]["top_sales_product"] == "P1"
+    assert results["product"]["top_profit_product"] == "P1"
+
+
+def test_profitability_analysis_exposes_total_loss():
+    df = make_df([
+        {"Category": "A", "Region": "X", "Customer Name": "C1", "Product Name": "Loss A", "Order Date": "2024-01-01", "Sales": 100, "Profit": -20},
+        {"Category": "A", "Region": "X", "Customer Name": "C2", "Product Name": "Loss B", "Order Date": "2024-01-01", "Sales": 50, "Profit": -5},
+        {"Category": "A", "Region": "X", "Customer Name": "C3", "Product Name": "Profit", "Order Date": "2024-01-01", "Sales": 200, "Profit": 40},
+    ])
+    results = BusinessInsights(df).run()["profitability"]
+    assert results["loss_making_product_count"] == 2
+    assert results["total_loss"] == pytest.approx(-25)
