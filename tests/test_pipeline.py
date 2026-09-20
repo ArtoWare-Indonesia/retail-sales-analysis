@@ -3,6 +3,7 @@ from pathlib import Path
 from src.loader import load_dataset
 from src.cleaning import DataCleaner
 from src.insights import BusinessInsights
+from src.business_metrics import BusinessMetrics
 from src.visualization import Visualizer
 from src.interactive_visualization import InteractiveVisualizer
 
@@ -38,9 +39,10 @@ def test_full_pipeline(tmp_path):
     assert len(chart_files) == 13
 
     # Interactive visualization
+    kpis = BusinessMetrics(cleaned_df).run()
     interactive_dir = tmp_path / "interactive"
     dashboard = InteractiveVisualizer(cleaned_df, interactive_dir).run(
-        results
+        kpis
     )
     assert dashboard.exists()
     assert dashboard.stat().st_size > 0
