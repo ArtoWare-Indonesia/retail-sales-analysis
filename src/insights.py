@@ -244,6 +244,23 @@ class BusinessInsights:
         top_product_sales = products["Sales"].max()
         top_product_profit = products["Profit"].max()
 
+        top_customer_contribution = self._safe_contribution(
+            top_customer_sales,
+            total_sales,
+        )
+        top_10_customer_contribution = self._safe_contribution(
+            top_10_customer_sales,
+            total_sales,
+        )
+        top_product_sales_contribution = self._safe_contribution(
+            top_product_sales,
+            total_sales,
+        )
+        top_product_profit_contribution = self._safe_contribution(
+            top_product_profit,
+            total_profit,
+        )
+
         return {
             "category": category,
             "region": region,
