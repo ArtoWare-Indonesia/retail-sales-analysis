@@ -3,10 +3,22 @@ Business insights for retail sales analysis.
 """
 
 import logging
+
 import pandas as pd
 
 
 logger = logging.getLogger(__name__)
+
+
+REQUIRED_COLUMNS = {
+    "Category",
+    "Region",
+    "Customer Name",
+    "Product Name",
+    "Order Date",
+    "Sales",
+    "Profit",
+}
 
 
 class BusinessInsights:
@@ -14,6 +26,66 @@ class BusinessInsights:
 
     def __init__(self, df):
         self.df = df.copy()
+        self._validate_schema()
+
+    def _validate_schema(self):
+        """Validate the minimum dataframe schema required by this module."""
+        missing = REQUIRED_COLUMNS - set(self.df.columns)
+
+        if missing:
+            raise ValueError(
+                f"Missing required columns: {sorted(missing)}"
+            )
+
+    @staticmethod
+    def _add_profit_margin(summary):
+        """Add profit margin calculated from aggregated sales and profit."""
+        summary = summary.copy()
+        summary["Profit Margin"] = (
+            summary["Profit"]
+            .div(summary["Sales"])
+            .mul(100)
+            .where(summary["Sales"] != 0, 0)
+        )
+        return summary
+
+    def _performance_summary(self, df, dimension):
+        """Aggregate sales, profit, and margin for a business dimension."""
+        summary = (
+            df.groupby(dimension)
+            .agg(
+                Sales=("Sales", "sum"),
+                Profit=("Profit", "sum"),
+            )
+        )
+        return self._add_profit_margin(summary)
+
+    @staticmethod
+    def _product_summary(df):
+        """Aggregate sales and profit by product."""
+        return (
+            df.groupby("Product Name")
+            .agg(
+                Sales=("Sales", "sum"),
+                Profit=("Profit", "sum"),
+            )
+        )
+
+    @staticmethod
+    def _customer_sales(df):
+        """Aggregate and sort sales by customer."""
+        return (
+            df.groupby("Customer Name")["Sales"]
+            .sum()
+            .sort_values(ascending=False)
+        )
+
+    @staticmethod
+    def _safe_contribution(value, total):
+        """Return percentage contribution without division-by-zero errors."""
+        if total == 0:
+            return 0
+        return value / total * 100
 
     def category_insights(self, df):
         """Generate category-level insights."""
@@ -22,19 +94,7 @@ class BusinessInsights:
             "Analyzing category performance..."
         )
 
-        summary = (
-            df.groupby("Category")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
-
-        summary["Profit Margin"] = (
-            summary["Profit"]
-            / summary["Sales"]
-            * 100
-        )
+        summary = self._performance_summary(df, "Category")
 
         best_sales = summary["Sales"].idxmax()
         best_profit = summary["Profit"].idxmax()
@@ -54,19 +114,7 @@ class BusinessInsights:
             "Analyzing regional performance..."
         )
 
-        summary = (
-            df.groupby("Region")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
-
-        summary["Profit Margin"] = (
-            summary["Profit"]
-            / summary["Sales"]
-            * 100
-        )
+        summary = self._performance_summary(df, "Region")
 
         best_sales = summary["Sales"].idxmax()
         best_profit = summary["Profit"].idxmax()
@@ -118,11 +166,7 @@ class BusinessInsights:
             "Analyzing customer performance..."
         )
 
-        customers = (
-            df.groupby("Customer Name")["Sales"]
-            .sum()
-            .sort_values(ascending=False)
-        )
+        customers = self._customer_sales(df)
 
         top_customer = customers.idxmax()
 
@@ -139,13 +183,7 @@ class BusinessInsights:
             "Analyzing product performance..."
         )
 
-        products = (
-            df.groupby("Product Name")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
+        products = self._product_summary(df)
 
         top_sales_product = products["Sales"].idxmax()
         top_profit_product = products["Profit"].idxmax()
@@ -175,96 +213,36 @@ class BusinessInsights:
         total_profit = df["Profit"].sum()
 
         # Category contribution
-        category = (
-            df.groupby("Category")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
+        category = self._performance_summary(df, "Category")
+        category["Sales Contribution"] = category["Sales"].apply(
+            self._safe_contribution,
+            total=total_sales,
         )
-
-        category["Sales Contribution"] = (
-            category["Sales"] / total_sales * 100
-        )
-
-        category["Profit Contribution"] = (
-            category["Profit"] / total_profit * 100
-        )
-
-        category["Profit Margin"] = (
-            category["Profit"]
-            / category["Sales"]
-            * 100
+        category["Profit Contribution"] = category["Profit"].apply(
+            self._safe_contribution,
+            total=total_profit,
         )
 
         # Region contribution
-        region = (
-            df.groupby("Region")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
+        region = self._performance_summary(df, "Region")
+        region["Sales Contribution"] = region["Sales"].apply(
+            self._safe_contribution,
+            total=total_sales,
         )
-
-        region["Sales Contribution"] = (
-            region["Sales"] / total_sales * 100
-        )
-
-        region["Profit Contribution"] = (
-            region["Profit"] / total_profit * 100
-        )
-
-        region["Profit Margin"] = (
-            region["Profit"]
-            / region["Sales"]
-            * 100
+        region["Profit Contribution"] = region["Profit"].apply(
+            self._safe_contribution,
+            total=total_profit,
         )
 
         # Customer concentration
-        customers = (
-            df.groupby("Customer Name")["Sales"]
-            .sum()
-            .sort_values(ascending=False)
-        )
-
+        customers = self._customer_sales(df)
         top_customer_sales = customers.iloc[0]
-
-        top_10_customer_sales = (
-            customers.head(10).sum()
-        )
-
-        top_customer_contribution = (
-            top_customer_sales / total_sales * 100
-        )
-
-        top_10_customer_contribution = (
-            top_10_customer_sales / total_sales * 100
-        )
+        top_10_customer_sales = customers.head(10).sum()
 
         # Product concentration
-        products = (
-            df.groupby("Product Name")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
-
-        top_product_sales = (
-            products["Sales"].max()
-        )
-
-        top_product_profit = (
-            products["Profit"].max()
-        )
-
-        top_product_sales_contribution = (
-            top_product_sales / total_sales * 100
-        )
-
-        top_product_profit_contribution = (
-            top_product_profit / total_profit * 100
-        )
+        products = self._product_summary(df)
+        top_product_sales = products["Sales"].max()
+        top_product_profit = products["Profit"].max()
 
         return {
             "category": category,
@@ -640,8 +618,13 @@ class BusinessInsights:
                     f"${product['top_profit_value']:,.2f} in profit."
                 ),
                 "implication": (
-                    "The product is a significant contributor to both "
-                    "sales and profitability."
+                    "The same product leads both sales and profitability."
+                    if product["top_sales_product"] == product["top_profit_product"]
+                    else (
+                        "Sales and profit leadership are concentrated in "
+                        "different products, so scale and profitability "
+                        "should be evaluated separately."
+                    )
                 ),
                 "recommendation": (
                     "Consider monitoring product availability and "
