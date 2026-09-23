@@ -124,7 +124,7 @@ The test suite covers:
 * Visualization
 * End-to-end pipeline integration
 
-**Current test status: 25 tests passed.**
+**Current test status: 29 tests passed.**
 
 ### Dataset Reusability
 
@@ -237,7 +237,7 @@ Run the complete test suite with:
 python -m pytest -q
 ```
 
-The repository baseline currently passes 25 tests.
+The repository baseline currently passes 29 tests.
 
 ### Jupyter Notebook
 
