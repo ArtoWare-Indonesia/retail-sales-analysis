@@ -1,6 +1,6 @@
 # ADR-004 — Dataset Reusability / Generic Schema Abstraction
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-23
 - **Baseline:** `main @ ad295bdec602fce70e0671ced2f24f826a86415c`
 - **Decision Scope:** Dataset schema abstraction and reusable pipeline boundaries
@@ -143,3 +143,26 @@ Reusable analysis pipeline
 ```
 
 The ADR does **not** authorize implementation until the decision is explicitly accepted.
+
+
+## Implementation Notes
+
+The accepted implementation uses `src/schema.py` as the explicit normalization boundary. Source datasets may provide a mapping of source column names to the canonical retail schema; downstream analysis consumes only the canonical schema.
+
+The canonical schema currently covers:
+
+- Order ID
+- Customer ID
+- Product ID
+- Category
+- Region
+- Customer Name
+- Product Name
+- Order Date
+- Ship Date
+- Sales
+- Profit
+- Quantity
+- Discount
+
+An alternate column naming scheme is covered by regression tests to prove that explicit mapping can feed the existing cleaning and metrics pipeline without changing downstream business semantics.
