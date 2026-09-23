@@ -1,6 +1,6 @@
 # Retail Sales Analysis
 
-![Python](https://img.shields.io/badge/Python-3.13-blue)
+![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
 ![Version](https://img.shields.io/badge/version-v0.6.0-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -92,7 +92,7 @@ The analysis includes metrics such as:
 
 ### Integrated Analysis Pipeline
 
-The project now provides an integrated pipeline through `main.py`:
+The project provides an integrated pipeline through `main.py`:
 
 ```text
 Raw Dataset
@@ -114,7 +114,7 @@ Analysis Output
 
 ### Automated Testing
 
-Version 0.5.0 introduces a dedicated test suite using `pytest`.
+The project uses `pytest` for automated regression testing.
 
 The test suite covers:
 
@@ -123,11 +123,22 @@ The test suite covers:
 * Visualization
 * End-to-end pipeline integration
 
-Current test status:
+**Current test status: 25 tests passed.**
 
-```text
-22 tests passed
+### Continuous Integration
+
+GitHub Actions automatically runs the test suite for:
+
+* Pull requests targeting `main`
+* Pushes to `main`
+
+The workflow uses Python 3.12, installs dependencies from `requirements.txt`, and runs:
+
+```bash
+python -m pytest -q
 ```
+
+See `docs/adr/002-automated-ci-test-workflow.md` for the CI decision record.
 
 ## Project Structure
 
@@ -138,20 +149,23 @@ retail-sales-analysis/
 │   │   └── superstore.csv
 │   └── processed/
 │       └── superstore_clean.csv
+├── docs/
+│   └── adr/
 ├── images/
-│   ├── discount_vs_profit.png
-│   ├── region_contribution.png
-│   └── sales_profit_contribution.png
 ├── notebooks/
-│   └── retail_sales_analysis.ipynb
+├── output/
+│   └── interactive/
 ├── src/
 │   ├── business_metrics.py
 │   ├── cleaning.py
 │   ├── insights.py
+│   ├── interactive_visualization.py
+│   ├── loader.py
 │   ├── visualization.py
 │   └── utils/
 │       └── logger.py
 ├── tests/
+│   ├── test_business_metrics.py
 │   ├── test_cleaning.py
 │   ├── test_insights.py
 │   ├── test_pipeline.py
@@ -164,16 +178,17 @@ retail-sales-analysis/
 
 ## Requirements
 
-* Python 3.13+
+* Python 3.12+
 * pandas
 * matplotlib
 * openpyxl
+* plotly
 * pytest
 
 Install the required dependencies:
 
 ```bash
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Usage
@@ -188,29 +203,15 @@ python main.py
 
 The main pipeline runs the data processing, business analysis, and visualization workflow.
 
-### Run Visualization Pipeline
-
-The visualization module can also be executed independently:
-
-```bash
-python -m src.visualization
-```
-
-The visualization pipeline loads the cleaned dataset and generates the configured analysis charts in the `images/` directory.
-
 ### Run Tests
 
 Run the complete test suite with:
 
 ```bash
-python -m pytest -v
+python -m pytest -q
 ```
 
-Expected result for version 0.5.0:
-
-```text
-22 passed
-```
+The repository baseline currently passes 25 tests.
 
 ### Jupyter Notebook
 
@@ -257,12 +258,13 @@ The project generates:
 * Customer performance analysis
 * Profitability analysis
 * Visualization figures in PNG format
+* Interactive HTML dashboard
 
 ## Current Version
 
 **v0.6.0 — Interactive Visualization**
 
-Version 0.5.0 extends the project from exploratory analysis and visualization into a more structured Business Intelligence pipeline.
+The v0.6.0 release extends the structured Business Intelligence pipeline with interactive Plotly visualization.
 
 ### Implemented
 
@@ -294,8 +296,10 @@ Version 0.5.0 extends the project from exploratory analysis and visualization in
 * Unit tests for cleaning
 * Unit tests for insights
 * Unit tests for visualization
+* Business metrics tests
 * End-to-end pipeline integration test
-* **14 tests passed**
+* Interactive Plotly HTML dashboard
+* GitHub Actions test workflow
 
 ## Roadmap
 
@@ -303,15 +307,22 @@ Version 0.5.0 extends the project from exploratory analysis and visualization in
 * ✅ v0.2.0 — Data Cleaning
 * ✅ v0.3.0 — Exploratory Data Analysis (EDA)
 * ✅ v0.4.0 — Advanced Data Visualization
-* ✅ v0.6.0 — Business Insights & Tested Analysis Pipeline
-* ⏳ v0.6.0 — Interactive Visualization
+* ✅ v0.5.0 — Business Insights & Tested Analysis Pipeline
+* ✅ v0.6.0 — Interactive Visualization
 * ⏳ v1.0.0 — Portfolio Release
 
 ### Future Development
 
-The next development phase will focus on improving the presentation and usability of the analysis, including interactive visualization and portfolio-oriented reporting.
+The next development phase will focus on portfolio readiness, presentation quality, and broader dataset reusability. Dataset reusability and generic-schema abstraction are intentionally tracked separately from the v0.6.0 baseline.
+
+## Architecture Decisions
+
+Repository-level architectural and process decisions are documented in `docs/adr/`:
+
+* ADR-001 — Internal Deduplication Refactor for `BusinessInsights`
+* ADR-002 — Automated CI Test Workflow
+* ADR-003 — Repository Documentation & Version Consistency
 
 ## License
 
 This project is licensed under the MIT License.
-

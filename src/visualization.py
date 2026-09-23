@@ -1,7 +1,7 @@
 """
 Visualization module for Retail Sales Analysis.
 
-Version : v0.5.0
+Version : v0.6.0
 Author  : ArtoWare Indonesia
 """
 
