@@ -3,6 +3,7 @@ import pytest
 
 from src.business_metrics import BusinessMetrics
 from src.cleaning import DataCleaner
+from src.insights import BusinessInsights
 from src.schema import REQUIRED_CANONICAL_COLUMNS, normalize_dataset
 
 
@@ -76,9 +77,12 @@ def test_alternate_schema_passes_through_analysis_pipeline(tmp_path):
     ).run()
 
     kpis = BusinessMetrics(cleaned).run()
+    insights = BusinessInsights(cleaned).run()
 
     assert kpis["total_sales"] == pytest.approx(150)
     assert kpis["total_profit"] == pytest.approx(25)
     assert kpis["total_orders"] == 2
     assert kpis["total_customers"] == 2
     assert kpis["total_products"] == 2
+    assert insights["category"]["highest_sales_category"] == "Technology"
+    assert insights["region"]["highest_sales_region"] == "West"
