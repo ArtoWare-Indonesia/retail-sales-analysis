@@ -43,6 +43,14 @@ ALTERNATE_MAPPING = {
 }
 
 
+def test_normalize_dataset_preserves_canonical_schema():
+    source = pd.DataFrame({column: [1] for column in REQUIRED_CANONICAL_COLUMNS})
+    normalized = normalize_dataset(source)
+
+    assert list(normalized.columns) == list(source.columns)
+    assert normalized is not source
+
+
 def test_normalize_dataset_maps_alternate_schema():
     normalized = normalize_dataset(make_alternate_dataset(), ALTERNATE_MAPPING)
 
