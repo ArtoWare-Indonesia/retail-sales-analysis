@@ -15,15 +15,11 @@ class BusinessInsights:
     def __init__(self, df):
         self.df = df.copy()
 
-    def category_insights(self, df):
-        """Generate category-level insights."""
-
-        logger.info(
-            "Analyzing category performance..."
-        )
+    def _aggregate_dimension(self, df, dimension):
+        """Aggregate sales, profit, and profit margin by dimension."""
 
         summary = (
-            df.groupby("Category")
+            df.groupby(dimension)
             .agg(
                 Sales=("Sales", "sum"),
                 Profit=("Profit", "sum"),
@@ -35,6 +31,17 @@ class BusinessInsights:
             / summary["Sales"]
             * 100
         )
+
+        return summary
+
+    def category_insights(self, df):
+        """Generate category-level insights."""
+
+        logger.info(
+            "Analyzing category performance..."
+        )
+
+        summary = self._aggregate_dimension(df, "Category")
 
         best_sales = summary["Sales"].idxmax()
         best_profit = summary["Profit"].idxmax()
@@ -54,19 +61,7 @@ class BusinessInsights:
             "Analyzing regional performance..."
         )
 
-        summary = (
-            df.groupby("Region")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
-
-        summary["Profit Margin"] = (
-            summary["Profit"]
-            / summary["Sales"]
-            * 100
-        )
+        summary = self._aggregate_dimension(df, "Region")
 
         best_sales = summary["Sales"].idxmax()
         best_profit = summary["Profit"].idxmax()
@@ -175,13 +170,7 @@ class BusinessInsights:
         total_profit = df["Profit"].sum()
 
         # Category contribution
-        category = (
-            df.groupby("Category")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
+        category = self._aggregate_dimension(df, "Category")
 
         category["Sales Contribution"] = (
             category["Sales"] / total_sales * 100
@@ -191,20 +180,13 @@ class BusinessInsights:
             category["Profit"] / total_profit * 100
         )
 
-        category["Profit Margin"] = (
-            category["Profit"]
-            / category["Sales"]
-            * 100
-        )
+        category = category[
+            ["Sales", "Profit", "Sales Contribution",
+             "Profit Contribution", "Profit Margin"]
+        ]
 
         # Region contribution
-        region = (
-            df.groupby("Region")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
+        region = self._aggregate_dimension(df, "Region")
 
         region["Sales Contribution"] = (
             region["Sales"] / total_sales * 100
@@ -214,11 +196,10 @@ class BusinessInsights:
             region["Profit"] / total_profit * 100
         )
 
-        region["Profit Margin"] = (
-            region["Profit"]
-            / region["Sales"]
-            * 100
-        )
+        region = region[
+            ["Sales", "Profit", "Sales Contribution",
+             "Profit Contribution", "Profit Margin"]
+        ]
 
         # Customer concentration
         customers = (
@@ -291,34 +272,10 @@ class BusinessInsights:
         )
 
         # Category
-        category = (
-            df.groupby("Category")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
-
-        category["Profit Margin"] = (
-            category["Profit"]
-            / category["Sales"]
-            * 100
-        )
+        category = self._aggregate_dimension(df, "Category")
 
         # Region
-        region = (
-            df.groupby("Region")
-            .agg(
-                Sales=("Sales", "sum"),
-                Profit=("Profit", "sum"),
-            )
-        )
-
-        region["Profit Margin"] = (
-            region["Profit"]
-            / region["Sales"]
-            * 100
-        )
+        region = self._aggregate_dimension(df, "Region")
 
         # Products
         products = (
