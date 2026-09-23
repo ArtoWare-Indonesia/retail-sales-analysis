@@ -142,7 +142,7 @@ Canonical retail schema
 Reusable analysis pipeline
 ```
 
-The ADR does **not** authorize implementation until the decision is explicitly accepted.
+The ADR is accepted and authorizes the implementation described above.
 
 
 ## Implementation Notes
