@@ -54,6 +54,7 @@ The analysis covers:
 * Bottom product analysis
 * Profitability analysis
 * Business insights generation
+* Explicit canonical dataset schema mapping
 
 ### Advanced Data Visualization
 
@@ -122,8 +123,33 @@ The test suite covers:
 * Business insights
 * Visualization
 * End-to-end pipeline integration
+* Dataset schema normalization and reusability
 
-**Current test status: 25 tests passed.**
+**Current test status: 29 tests passed.**
+
+### Dataset Reusability
+
+The analysis pipeline uses a canonical retail schema defined in `src/schema.py`. Source datasets can be connected through an explicit source-column → canonical-column mapping before entering the cleaning and analysis layers.
+
+This is controlled reusability: datasets are supported when their business fields can be explicitly mapped to the documented canonical schema. The project does not attempt automatic semantic column inference.
+
+The canonical schema currently includes:
+
+* Order ID
+* Customer ID
+* Product ID
+* Category
+* Region
+* Customer Name
+* Product Name
+* Order Date
+* Ship Date
+* Sales
+* Profit
+* Quantity
+* Discount
+
+See `docs/adr/004-dataset-reusability.md` for the architectural decision and implementation contract.
 
 ### Continuous Integration
 
@@ -161,6 +187,7 @@ retail-sales-analysis/
 │   ├── insights.py
 │   ├── interactive_visualization.py
 │   ├── loader.py
+│   ├── schema.py
 │   ├── visualization.py
 │   └── utils/
 │       └── logger.py
@@ -169,6 +196,7 @@ retail-sales-analysis/
 │   ├── test_cleaning.py
 │   ├── test_insights.py
 │   ├── test_pipeline.py
+│   ├── test_schema.py
 │   └── test_visualization.py
 ├── config.py
 ├── main.py
@@ -211,7 +239,7 @@ Run the complete test suite with:
 python -m pytest -q
 ```
 
-The repository baseline currently passes 25 tests.
+The repository baseline currently passes 29 tests.
 
 ### Jupyter Notebook
 
@@ -298,6 +326,7 @@ The v0.6.0 release extends the structured Business Intelligence pipeline with in
 * Unit tests for visualization
 * Business metrics tests
 * End-to-end pipeline integration test
+* Dataset schema normalization and alternate-schema regression tests
 * Interactive Plotly HTML dashboard
 * GitHub Actions test workflow
 
@@ -313,7 +342,7 @@ The v0.6.0 release extends the structured Business Intelligence pipeline with in
 
 ### Future Development
 
-The next development phase will focus on portfolio readiness, presentation quality, and broader dataset reusability. Dataset reusability and generic-schema abstraction are intentionally tracked separately from the v0.6.0 baseline.
+The ADR-004 controlled reusability boundary is implemented on the current development branch. Future work may extend reuse through additional explicit schema adapters or broader dataset coverage, while automatic semantic inference remains outside the project's current scope.
 
 ## Architecture Decisions
 
@@ -322,6 +351,7 @@ Repository-level architectural and process decisions are documented in `docs/adr
 * ADR-001 — Internal Deduplication Refactor for `BusinessInsights`
 * ADR-002 — Automated CI Test Workflow
 * ADR-003 — Repository Documentation & Version Consistency
+* ADR-004 — Dataset Reusability / Generic Schema Abstraction
 
 ## License
 

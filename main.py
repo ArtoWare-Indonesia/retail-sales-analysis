@@ -8,6 +8,7 @@ import logging
 from config import (APP_NAME, APP_VERSION, DATASET_FILE, )
 from src.utils.logger import setup_logger
 from src.loader import load_dataset
+from src.schema import normalize_dataset
 from src.cleaning import DataCleaner
 from src.insights import BusinessInsights
 from src.business_metrics import BusinessMetrics
@@ -29,6 +30,7 @@ def main():
         # Load the dataset
         logger.info("Loading raw dataset...")
         df = load_dataset(DATASET_FILE)
+        df = normalize_dataset(df)
 
         logger.info(
             "Dataset loaded successfully. "

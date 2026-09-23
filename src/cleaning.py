@@ -5,17 +5,15 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.schema import REQUIRED_CANONICAL_COLUMNS
+
 logger = logging.getLogger(__name__)
 
 
 class DataCleaner:
     """Clean and validate the retail sales dataset."""
 
-    REQUIRED_COLUMNS = {
-        "Order ID", "Customer ID", "Product ID", "Category", "Region",
-        "Customer Name", "Product Name", "Order Date", "Ship Date",
-        "Sales", "Profit", "Quantity", "Discount",
-    }
+    REQUIRED_COLUMNS = REQUIRED_CANONICAL_COLUMNS
 
     NUMERIC_COLUMNS = ["Sales", "Profit", "Quantity", "Discount"]
     DATE_COLUMNS = ["Order Date", "Ship Date"]
