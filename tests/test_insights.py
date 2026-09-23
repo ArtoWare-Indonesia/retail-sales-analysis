@@ -16,6 +16,25 @@ def make_df(rows):
     return pd.DataFrame(rows)
 
 
+
+def test_aggregate_dimension_preserves_summary_semantics():
+    df = make_df([
+        {"Category": "A", "Sales": 100, "Profit": 10},
+        {"Category": "A", "Sales": 50, "Profit": 5},
+        {"Category": "B", "Sales": 200, "Profit": 40},
+    ])
+    insights = BusinessInsights(df)
+
+    summary = insights._aggregate_dimension(df, "Category")
+
+    assert list(summary.columns) == ["Sales", "Profit", "Profit Margin"]
+    assert summary.loc["A", "Sales"] == 150
+    assert summary.loc["A", "Profit"] == 15
+    assert summary.loc["A", "Profit Margin"] == pytest.approx(10.0)
+    assert summary.loc["B", "Sales"] == 200
+    assert summary.loc["B", "Profit"] == 40
+    assert summary.loc["B", "Profit Margin"] == pytest.approx(20.0)
+
 def test_business_insights_run():
     results = get_insights()
     expected_keys = {
