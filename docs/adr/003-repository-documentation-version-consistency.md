@@ -1,6 +1,6 @@
 # ADR-003 — Repository Documentation & Version Consistency
 
-- **Status:** Proposed
+- **Status:** Accepted
 - **Date:** 2026-09-23
 - **Decision scope:** Repository documentation and version metadata consistency
 - **Baseline:** `main` at the current post-ADR-002 state
