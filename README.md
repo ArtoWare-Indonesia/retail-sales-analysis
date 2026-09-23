@@ -123,6 +123,7 @@ The test suite covers:
 * Business insights
 * Visualization
 * End-to-end pipeline integration
+* Dataset schema normalization and reusability
 
 **Current test status: 29 tests passed.**
 
@@ -195,6 +196,7 @@ retail-sales-analysis/
 │   ├── test_cleaning.py
 │   ├── test_insights.py
 │   ├── test_pipeline.py
+│   ├── test_schema.py
 │   └── test_visualization.py
 ├── config.py
 ├── main.py
@@ -324,6 +326,7 @@ The v0.6.0 release extends the structured Business Intelligence pipeline with in
 * Unit tests for visualization
 * Business metrics tests
 * End-to-end pipeline integration test
+* Dataset schema normalization and alternate-schema regression tests
 * Interactive Plotly HTML dashboard
 * GitHub Actions test workflow
 
@@ -339,7 +342,7 @@ The v0.6.0 release extends the structured Business Intelligence pipeline with in
 
 ### Future Development
 
-The next development phase will focus on portfolio readiness, presentation quality, and broader dataset reusability. Dataset reusability and generic-schema abstraction are intentionally tracked separately from the v0.6.0 baseline.
+The ADR-004 controlled reusability boundary is implemented on the current development branch. Future work may extend reuse through additional explicit schema adapters or broader dataset coverage, while automatic semantic inference remains outside the project's current scope.
 
 ## Architecture Decisions
 
