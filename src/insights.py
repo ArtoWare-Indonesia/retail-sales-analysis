@@ -180,6 +180,11 @@ class BusinessInsights:
             category["Profit"] / total_profit * 100
         )
 
+        category = category[
+            ["Sales", "Profit", "Sales Contribution",
+             "Profit Contribution", "Profit Margin"]
+        ]
+
         # Region contribution
         region = self._aggregate_dimension(df, "Region")
 
@@ -190,6 +195,11 @@ class BusinessInsights:
         region["Profit Contribution"] = (
             region["Profit"] / total_profit * 100
         )
+
+        region = region[
+            ["Sales", "Profit", "Sales Contribution",
+             "Profit Contribution", "Profit Margin"]
+        ]
 
         # Customer concentration
         customers = (
