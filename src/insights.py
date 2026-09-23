@@ -180,14 +180,6 @@ class BusinessInsights:
             category["Profit"] / total_profit * 100
         )
 
-        category["Sales Contribution"] = (
-            category["Sales"] / total_sales * 100
-        )
-
-        category["Profit Contribution"] = (
-            category["Profit"] / total_profit * 100
-        )
-
         # Region contribution
         region = self._aggregate_dimension(df, "Region")
 
