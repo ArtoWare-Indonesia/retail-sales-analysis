@@ -54,6 +54,7 @@ The analysis covers:
 * Bottom product analysis
 * Profitability analysis
 * Business insights generation
+* Explicit canonical dataset schema mapping
 
 ### Advanced Data Visualization
 
@@ -125,6 +126,30 @@ The test suite covers:
 
 **Current test status: 25 tests passed.**
 
+### Dataset Reusability
+
+The analysis pipeline uses a canonical retail schema defined in `src/schema.py`. Source datasets can be connected through an explicit source-column → canonical-column mapping before entering the cleaning and analysis layers.
+
+This is controlled reusability: datasets are supported when their business fields can be explicitly mapped to the documented canonical schema. The project does not attempt automatic semantic column inference.
+
+The canonical schema currently includes:
+
+* Order ID
+* Customer ID
+* Product ID
+* Category
+* Region
+* Customer Name
+* Product Name
+* Order Date
+* Ship Date
+* Sales
+* Profit
+* Quantity
+* Discount
+
+See `docs/adr/004-dataset-reusability.md` for the architectural decision and implementation contract.
+
 ### Continuous Integration
 
 GitHub Actions automatically runs the test suite for:
@@ -161,6 +186,7 @@ retail-sales-analysis/
 │   ├── insights.py
 │   ├── interactive_visualization.py
 │   ├── loader.py
+│   ├── schema.py
 │   ├── visualization.py
 │   └── utils/
 │       └── logger.py
@@ -322,6 +348,7 @@ Repository-level architectural and process decisions are documented in `docs/adr
 * ADR-001 — Internal Deduplication Refactor for `BusinessInsights`
 * ADR-002 — Automated CI Test Workflow
 * ADR-003 — Repository Documentation & Version Consistency
+* ADR-004 — Dataset Reusability / Generic Schema Abstraction
 
 ## License
 
