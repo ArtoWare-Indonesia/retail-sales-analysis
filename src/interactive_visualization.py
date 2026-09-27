@@ -21,8 +21,8 @@ class InteractiveVisualizer:
     def _format_kpis(kpis):
         """Return presentation-ready KPI values."""
         return [
-            ("Sales", f"$\u200b{kpis['total_sales']:,.0f}"),
-            ("Profit", f"$\u200b{kpis['total_profit']:,.0f}"),
+            ("Sales", f"${kpis['total_sales']:,.0f}"),
+            ("Profit", f"${kpis['total_profit']:,.0f}"),
             ("Profit Margin", f"{kpis['profit_margin']:.2f}%"),
             ("Orders", f"{kpis['total_orders']:,}"),
             ("Customers", f"{kpis['total_customers']:,}"),
