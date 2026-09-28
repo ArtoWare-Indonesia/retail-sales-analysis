@@ -85,15 +85,55 @@ class InteractiveVisualizer:
         return self._style_chart(fig, "Monthly Sales Trend")
 
     def discount_profit_chart(self):
-        fig = px.scatter(
-            self.df,
-            x="Discount",
-            y="Profit",
-            color="Category",
-            hover_data={"Sales": ":,.0f", "Product Name": True},
-            labels={"Discount": "Discount", "Profit": "Profit"},
+        """Show average profit at each discount level with order volume context."""
+        data = (
+            self.df.groupby("Discount", as_index=False)
+            .agg(
+                Average_Profit=("Profit", "mean"),
+                Median_Profit=("Profit", "median"),
+                Orders=("Order ID", "nunique"),
+                Sales=("Sales", "sum"),
+            )
+            .sort_values("Discount")
         )
-        return self._style_chart(fig, "Discount vs Profit")
+
+        fig = px.line(
+            data,
+            x="Discount",
+            y="Average_Profit",
+            markers=True,
+            hover_data={
+                "Average_Profit": ":,.2f",
+                "Median_Profit": ":,.2f",
+                "Orders": ":,",
+                "Sales": ":,.0f",
+            },
+            labels={
+                "Discount": "Discount",
+                "Average_Profit": "Average Profit",
+            },
+        )
+        fig.update_traces(
+            line=dict(width=3),
+            marker=dict(size=9),
+            hovertemplate=(
+                "<b>Discount: %{x:.0%}</b><br>"
+                "Average Profit: $%{y:,.2f}<br>"
+                "Median Profit: $%{customdata[1]:,.2f}<br>"
+                "Orders: %{customdata[2]:,}<br>"
+                "Sales: $%{customdata[3]:,.0f}<extra></extra>"
+            ),
+        )
+        fig.add_hline(
+            y=0,
+            line_dash="dash",
+            line_width=1,
+            annotation_text="Break-even",
+            annotation_position="top left",
+        )
+        fig.update_xaxes(tickformat=".0%")
+        return self._style_chart(fig, "Discount vs Average Profit")
+
 
     def _kpi_cards_html(self, kpis):
         """Build lightweight HTML KPI cards instead of a Plotly table."""
