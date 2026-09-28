@@ -116,13 +116,6 @@ class InteractiveVisualizer:
         fig.update_traces(
             line=dict(width=3),
             marker=dict(size=9),
-            hovertemplate=(
-                "<b>Discount: %{x:.0%}</b><br>"
-                "Average Profit: $%{y:,.2f}<br>"
-                "Median Profit: $%{customdata[1]:,.2f}<br>"
-                "Orders: %{customdata[2]:,}<br>"
-                "Sales: $%{customdata[3]:,.0f}<extra></extra>"
-            ),
         )
         fig.add_hline(
             y=0,
