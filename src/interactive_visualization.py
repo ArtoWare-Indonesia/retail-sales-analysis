@@ -213,7 +213,7 @@ class InteractiveVisualizer:
                     config={
                         "displaylogo": False,
                         "responsive": True,
-                        "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                        "displayModeBar": False,
                     },
                 )
             )
