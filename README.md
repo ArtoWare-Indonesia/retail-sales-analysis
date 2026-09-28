@@ -1,7 +1,8 @@
 # Retail Sales Analysis
 
 ![Python](https://img.shields.io/badge/Python-3.12%2B-blue)
-![Version](https://img.shields.io/badge/version-v0.6.0-green)
+![Portfolio Release](https://img.shields.io/badge/portfolio-v1.0.0-green)
+![Core Application](https://img.shields.io/badge/core--application-v0.6.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 A Business Intelligence portfolio project that analyzes retail sales data using Python, Pandas, Matplotlib, and Plotly.
@@ -32,6 +33,19 @@ The analysis covers:
 * Automated analysis pipeline
 * Automated testing
 * Interactive HTML dashboard
+
+## Release & Versioning
+
+**Portfolio Release:** `v1.0.0 — Portfolio Release`
+
+**Core Application Version:** `v0.6.0 — Interactive Visualization`
+
+The project uses two version references with different scopes:
+
+* **v1.0.0** identifies the finalized portfolio release, including the portfolio notebook, analytical narrative, reproducibility improvements, canonical schema integration, and portfolio-ready evidence.
+* **v0.6.0** identifies the reusable core application layer in `src/`, `main.py`, and related application metadata.
+
+This separation is intentional: the `v1.0.0` portfolio release builds on the established `v0.6.0` application architecture without introducing a new application architecture version.
 
 ## Features
 
@@ -68,11 +82,11 @@ The visualization pipeline generates analysis charts including:
 * Product performance
 * Profitability analysis
 
-Visualization figures are exported as PNG files to the `images/` directory. Version 0.6.0 also generates an interactive Plotly HTML dashboard in `output/interactive/`.
+Visualization figures are exported as PNG files to the `images/` directory. The core application also generates an interactive Plotly HTML dashboard in `output/interactive/`.
 
 ### Business Metrics & Insights
 
-Version 0.6.0 includes the dedicated business analysis layer introduced in v0.5.0 and extends it with interactive visualization.
+The core application includes the dedicated business analysis layer introduced in v0.5.0 and extended with interactive visualization in v0.6.0.
 
 Business metrics and business insights consume the same cleaned DataFrame, keeping the pipeline consistent and easier to test and extend.
 
@@ -241,15 +255,17 @@ python -m pytest -q
 
 The repository baseline currently passes 29 tests.
 
-### Jupyter Notebook
+### Portfolio Notebook
 
-The exploratory analysis can also be viewed in:
+The finalized portfolio notebook is:
 
 ```text
-notebooks/retail_sales_analysis.ipynb
+notebooks/Retail_Sales_Analysis.ipynb
 ```
 
-The notebook contains the EDA process, visualizations, and interpretation of the analysis results.
+The notebook is the **portfolio storytelling layer**. It presents the analysis as a reproducible business narrative covering data quality, preparation, KPIs, business analysis, visual evidence, implications, and the interactive dashboard reference.
+
+The notebook identifies itself as **v1.0.0 portfolio notebook** and uses the reusable `src/` application layers rather than duplicating the underlying analysis logic.
 
 ## Analysis Workflow
 
@@ -288,49 +304,9 @@ The project generates:
 * Visualization figures in PNG format
 * Interactive HTML dashboard
 
-## Current Version
+## Milestones
 
-**v0.6.0 — Interactive Visualization**
-
-The v0.6.0 release extends the structured Business Intelligence pipeline with interactive Plotly visualization.
-
-### Implemented
-
-* Project setup
-* Data loading
-* Data cleaning pipeline
-* Missing value detection
-* Duplicate detection and removal
-* Data type validation
-* Feature engineering
-* Exploratory Data Analysis (EDA)
-* Sales analysis by category
-* Sales analysis by region
-* Monthly sales trend analysis
-* Top 10 customer analysis
-* Top product analysis
-* Bottom product analysis
-* Profitability analysis
-* Advanced data visualization
-* Business metrics module
-* Business insights module
-* Integrated analysis pipeline
-* Configurable application settings
-* Centralized logging
-* Automated chart generation
-* Export cleaned dataset
-* Export visualization images
-* Automated test suite
-* Unit tests for cleaning
-* Unit tests for insights
-* Unit tests for visualization
-* Business metrics tests
-* End-to-end pipeline integration test
-* Dataset schema normalization and alternate-schema regression tests
-* Interactive Plotly HTML dashboard
-* GitHub Actions test workflow
-
-## Roadmap
+### Core Application Milestones
 
 * ✅ v0.1.0 — Project Setup
 * ✅ v0.2.0 — Data Cleaning
@@ -338,11 +314,16 @@ The v0.6.0 release extends the structured Business Intelligence pipeline with in
 * ✅ v0.4.0 — Advanced Data Visualization
 * ✅ v0.5.0 — Business Insights & Tested Analysis Pipeline
 * ✅ v0.6.0 — Interactive Visualization
-* ⏳ v1.0.0 — Portfolio Release
+
+### Portfolio Milestone
+
+* ✅ v1.0.0 — Portfolio Release
+
+The v1.0.0 portfolio milestone finalizes the analytical presentation layer and reproducible portfolio narrative on top of the v0.6.0 core application.
 
 ### Future Development
 
-The ADR-004 controlled reusability boundary is implemented on the current development branch. Future work may extend reuse through additional explicit schema adapters or broader dataset coverage, while automatic semantic inference remains outside the project's current scope.
+The ADR-004 controlled reusability boundary is implemented. Future work may extend reuse through additional explicit schema adapters or broader dataset coverage, while automatic semantic inference remains outside the project's current scope.
 
 ## Architecture Decisions
 
